@@ -34,18 +34,14 @@ class ProductTest extends TestCase
             ]);
     }
 
-    public function testCollectionWrap()
+    public function testProductsPaging()
     {
         $this->seed([CategorySeeder::class, ProductSeeder::class]);
-        $response = $this->get("/api/products")
+        $response = $this->get("/api/products-paging")
             ->assertStatus(200);
 
-        $names = $response->json("data.*.name");
-        for ($i = 0; $i < 5; $i++) {
-            self::assertContains("Product $i of Food", $names);
-        }
-        for ($i = 0; $i < 5; $i++) {
-            self::assertContains("Product $i of Gadget", $names);
-        }
+        self::assertNotNull($response->json("links"));
+        self::assertNotNull($response->json("meta"));
+        self::assertNotNull($response->json("data"));
     }
 }
