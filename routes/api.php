@@ -69,5 +69,8 @@ Route::get('/products-debug/{id}', function ($id) {
 Route::get('/products/{id}', function ($id) {
     $products = Product::find($id);
     $products->load("category");
-    return new ProductResource($products);
+    // return new ProductResource($products);
+    return (new ProductResource($products))
+        ->response()
+        ->header("X-Powered-By", "Anita Silvi Ferdina");
 });

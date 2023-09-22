@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Product;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\ProductSeeder;
@@ -20,6 +21,7 @@ class ProductTest extends TestCase
         $product = Product::first();
         $this->get("/api/products/$product->id")
             ->assertStatus(200)
+            ->assertHeader("X-Powered-By", "Anita Silvi Ferdina")
             ->assertJson([
                 "value" => [
                     "name" => $product->name,
@@ -33,6 +35,22 @@ class ProductTest extends TestCase
                     "updated_at" => $product->updated_at->toJSON()
                 ]
             ]);
+    }
+
+    public function testCollectionWrap()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+        $response = $this->get('/api/products')
+            ->assertStatus(200)
+            ->assertHeader("X-Powered-By", "Anita Silvi Ferdina");
+
+        $names = $response->json("data.*.name");
+        for ($i = 0; $i < 5; $i++) {
+            self::assertContains("Product $i of Food", $names);
+        }
+        for ($i = 0; $i < 5; $i++) {
+            self::assertContains("Product $i of Gadget", $names);
+        }
     }
 
     public function testProductsPaging()
