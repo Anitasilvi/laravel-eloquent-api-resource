@@ -12,16 +12,21 @@ class ProductDebugResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public $additional = [
-        "author" => "Anita Silvi Ferdina"
-    ];
+    // public $additional = [
+    //     "author" => "Anita Silvi Ferdina"
+    // ];
+    public static $wrap = "data";
 
     public function toArray(Request $request): array
     {
         return [
-            "id" => $this->id,
-            "name" => $this->name,
-            "price" => $this->price
+            "author" => "Anita Silvi Ferdina",
+            "server_time" => now()->toDateTimeString(),
+            "data" => [
+                "id" => $this->id,
+                "name" => $this->name,
+                "price" => $this->price
+            ]
         ];
     }
 }
