@@ -40,13 +40,18 @@ Route::get('/categories-custom', function () {
     return new CategoryCollection($categories);
 });
 
-Route::get('/products/{id}', function ($id) {
-    $products = Product::find($id);
-    return new ProductResource($products);
-});
+// Route::get('/products/{id}', function ($id) {
+//     $products = Product::find($id);
+//     return new ProductResource($products);
+// });
+
+// Route::get('/products', function () {
+//     $product = Product::all();
+//     return new ProductCollection($product);
+// });
 
 Route::get('/products', function () {
-    $product = Product::all();
+    $product = Product::with('category')->get();
     return new ProductCollection($product);
 });
 
@@ -59,4 +64,10 @@ Route::get('/products-paging', function (Request $request) {
 Route::get('/products-debug/{id}', function ($id) {
     $product = Product::find($id);
     return new ProductDebugResource($product);
+});
+
+Route::get('/products/{id}', function ($id) {
+    $products = Product::find($id);
+    $products->load("category");
+    return new ProductResource($products);
 });
